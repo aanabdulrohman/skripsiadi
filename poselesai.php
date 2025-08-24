@@ -17,30 +17,19 @@ require 'connect.php';
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Stock Barang </title>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous">
     </script>
 
     <!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
 
-<!-- jQuery (sudah ada di atas kamu) -->
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
-<!-- <script>
-$(document).ready(function () {
-    $('#datatablesSimple').DataTable({
-        searching: true,
-        paging: true,
-        info: true,
-        columnDefs: [
-            { targets: "_all", searchable: true }
-        ]
-    });
-});
-</script> -->
+    <!-- jQuery (sudah ada di atas kamu) -->
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+
+  
 
 </head>
 
@@ -48,7 +37,7 @@ $(document).ready(function () {
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-4" href="index.php"><br> <br>
-            <h6>PT Kencana Bangsa <br />Agro</h6>
+            <h6>AGP Olivia Sukses <br /></h6>
         </a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
@@ -102,7 +91,7 @@ $(document).ready(function () {
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Database Client
                         </a>
-                       
+
 
                         <!-- sub menu data prediksi -->
                         <!-- <a class="nav-link dropdown" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
@@ -189,79 +178,123 @@ $(document).ready(function () {
                         </div>
 
                         <div class="card-body text-left">
-                           
-                        <?php
-// Koneksi database
-$conn = mysqli_connect("localhost", "root", "", "stockbarang");
-if (!$conn) {
-    die("Koneksi gagal: " . mysqli_connect_error());
-}
 
-// Ambil data dari tabel poselesai
-$sql = "SELECT * FROM poselesai ORDER BY tanggal DESC";
-$result = mysqli_query($conn, $sql);
-?>
+                            <?php
+                            // Koneksi database
+                            $conn = mysqli_connect("localhost", "root", "", "stockbarang");
+                            if (!$conn) {
+                                die("Koneksi gagal: " . mysqli_connect_error());
+                            }
 
-<form method="POST" action="cetak.php" target="_blank" onsubmit="return cekPilih();">
-    <table id="datatablesSimple" border="1" cellpadding="8" cellspacing="0" class="table table-bordered" style="border-collapse: collapse; width: 100%; ">
-        <thead>
-            <tr>
-                <th><input type="checkbox" id="checkAll"></th>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>No Invoice</th>
-                <th>Nama Perusahaan</th>
-                <th>Nama Barang</th>
-                <th>Harga</th>
-                <th>Total</th>
-                <th>Qty</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if (mysqli_num_rows($result) > 0) {
-                $no = 1;
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>
-<td><input type='checkbox' name='pilih[]' value='".(int)$row['idkeluar']."'></td>
-                        <td>".$no."</td>
-                        <td>".$row['tanggal']."</td>
-                        <td>".$row['no_invoice']."</td>
-                        <td>".$row['namapt']."</td>
-                        <td>".$row['nama_barang']."</td>
-                        <td>".number_format($row['harga'], 0, ',', '.')."</td>
-                        <td>".number_format($row['total'], 0, ',', '.')."</td>
-                        <td>".$row['qty']."</td>
-                    </tr>";
-                    $no++;
-                }
-            } else {
-                echo "<tr><td colspan='9' align='center'>Tidak ada data</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-    <br>
-    <button type="submit" class="btn btn-primary" >Cetak</button>
-</form>
+                            // Ambil data dari tabel poselesai
+                            $sql = "SELECT * FROM poselesai ORDER BY tanggal DESC";
+                            $result = mysqli_query($conn, $sql);
+                            ?><!-- Form hanya untuk checkbox & tombol -->
+                            <form method="POST" action="cetak.php" target="_blank" onsubmit="return cekPilih();">
+                            
+                                <!-- Tabel -->
+                                <table id="datatablesSimple" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="checkAll"></th>
+                                            <th>No</th>
+                                            <th>Tanggal</th>
+                                            <th>No Invoice</th>
+                                            <th>Nama Perusahaan</th>
+                                            <th>Nama Barang</th>
+                                            <th>Harga</th>
+                                            <th>Total</th>
+                                            <th>Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        if (mysqli_num_rows($result) > 0) {
+                                            $no = 1;
+                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                echo "<tr>
+                                                    <td><input type='checkbox' class='checkItem' name='pilih[]' value='" . (int)$row['idkeluar'] . "'></td>
+                                                    <td>" . $no . "</td>
+                                                    <td>" . $row['tanggal'] . "</td>
+                                                    <td>" . $row['no_invoice'] . "</td>
+                                                    <td>" . $row['namapt'] . "</td>
+                                                    <td>" . $row['nama_barang'] . "</td>
+                                                    <td>" . number_format($row['harga'], 0, ',', '.') . "</td>
+                                                    <td>" . number_format($row['total'], 0, ',', '.') . "</td>
+                                                    <td>" . $row['qty'] . "</td>
+                                                </tr>";
+                                                $no++;
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='9' align='center'>Tidak ada data</td></tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            
+                                <br>
+                                <button type="submit" class="btn btn-primary">Cetak</button>
+                            </form>
+                            
+                            <!-- jQuery + DataTables -->
+                            <script>
+                                $(document).ready(function() {
+                                    // Inisialisasi DataTables (pastikan hanya sekali!)
+                                    var table = $('#datatablesSimple').DataTable({
+                                        searching: true,
+                                        paging: true,
+                                        info: true
+                                    });
+                            
+                                    // Cek minimal satu checkbox terpilih
+                                    window.cekPilih = function() {
+                                        if ($("input[name='pilih[]']:checked").length === 0) {
+                                            alert("Pilih minimal satu data untuk dicetak!");
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+                            
+                                    // Check All
+                                    $('#checkAll').on('click', function() {
+                                        var checked = this.checked;
+                                        $('input.checkItem').prop('checked', checked);
+                                    });
+                            
+                                    // Update Check All otomatis
+                                    $('#datatablesSimple').on('change', 'input.checkItem', function() {
+                                        if ($('input.checkItem:checked').length === $('input.checkItem').length) {
+                                            $('#checkAll').prop('checked', true);
+                                        } else {
+                                            $('#checkAll').prop('checked', false);
+                                        }
+                                    });
+                                });
+                            </script>
+                            
 
-<script>
-// Cek minimal satu checkbox terpilih
-function cekPilih() {
-    let checkboxes = document.querySelectorAll("input[name='pilih[]']:checked");
-    if (checkboxes.length === 0) {
-        alert("Pilih minimal satu data untuk dicetak!");
-        return false;
-    }
-    return true;
-}
+                            <!-- //modal hapus po selesai -->
+                            <div class="modal fade" id="delete<?= $row['idkeluar']; ?>" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Konfirmasi Hapus</h5>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Apakah Anda yakin ingin menghapus data <b><?= $row['nama_barang']; ?></b>?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form method="POST" action="delete.php">
+                                                <input type="hidden" name="idkeluar" value="<?= $row['idkeluar']; ?>">
+                                                <button type="submit" class="btn btn-danger">Hapus</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-// Pilih semua checkbox
-document.getElementById("checkAll").addEventListener("change", function() {
-    let status = this.checked;
-    document.querySelectorAll("input[name='pilih[]']").forEach(cb => cb.checked = status);
-});
-</script>
 
                         </div>
                     </div>
@@ -314,7 +347,7 @@ document.getElementById("checkAll").addEventListener("change", function() {
                             $idbarangnya = $fetcharray['idbarang'];
                         ?>
 
-                        <option value="<?= $idbarangnya; ?>"><?= $namabarangnya; ?></option>
+                            <option value="<?= $idbarangnya; ?>"><?= $namabarangnya; ?></option>
 
                         <?php
                         }
