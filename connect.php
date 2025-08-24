@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 $conn = mysqli_connect("localhost", "root", "", "stockbarang");
 
 // Menambah Barang Baru
@@ -75,7 +75,7 @@ if (isset($_POST['barangudhmasuk'])) {
     $addtotabel2 = mysqli_query($conn, "INSERT INTO masuk1 (idbarang, keterangan,qty) VALUES  ('$barangnya','$penerima','$qty')");
     $updatestockmasuk = mysqli_query($conn, "update stock set stock ='$tambahkanstockdenganqty' where idbarang ='$barangnya'");
     if ($addtotabel2 && $updatestockmasuk) {
-        header('location:masuk.php');
+        header('location:index.php');
     } else {
         echo 'gagal ';
         header('location:404.html');
@@ -88,14 +88,14 @@ if (isset($_POST['barangkeluar'])) {
     $penerima = $_POST['penerima'];
     $qty = $_POST['qty'];
 
-    $cekstocksekarang  = mysqli_query($conn, "select * from barangkeluar where idbarang='$barangnya'");
+    $cekstocksekarang  = mysqli_query($conn, "select * from keluar where idbarang='$barangnya'");
     $ambildatanya = mysqli_fetch_array($cekstocksekarang);
 
     $stocksekarang = $ambildatanya['stock'];
-    $tambahkanstockdenganqty = $stocksekarang + $qty;
+    $tambahkanstockdenganqty = $stocksekarang - $qty;
 
 
-    $addkeluar = mysqli_query($conn, "INSERT INTO keluar (idbarang, penerima,qty) VALUES  ('$barangnya','$penerima','$qty')");
+    $addkeluar = mysqli_query($conn, "INSERT INTO keluar (idbarang, penerima,qty,diterima) VALUES  ('$barangnya','$penerima','$diterima','$qty')");
     $updatestockkeluar = mysqli_query($conn, "update barangkeluar set stock ='$tambahkanstockdenganqty' where idbarang ='$barangnya'");
     if ($addkeluar && $updatestockkeluar) {
         header('location:keluar.php');
@@ -108,42 +108,40 @@ if (isset($_POST['barangkeluar'])) {
 
 //Menambah barang keluar 
 
-if (isset($_POST['addbarangout'])) {
-    $barangnya = $_POST['barangnya'];
-    $penerima = $_POST['penerima'];
-    $qty = $_POST['qty'];
+// if (isset($_POST['addbarangout'])) {
+//     $barangnya = $_POST['barangnya'];
+//     $penerima = $_POST['penerima'];
+//     $qty = $_POST['qty'];
+//     $alamat = $_POST['alamat'];
+//     $diterima = $_POST['diterima'];
 
-    $cekstocksekarang1  = mysqli_query($conn, "select * from stock where idbarang='$barangnya'");
-    $cekstocksekarang  = mysqli_query($conn, "select * from barangkeluar where idbarang='$barangnya'");
+//     $cekstocksekarang  = mysqli_query($conn, "select * from stock where idbarang='$barangnya'");
+//     $ambildatanya = mysqli_fetch_array($cekstocksekarang);
+    
+//     $stocksekarang = $ambildatanya['stock'];
 
-    $ambildatanya1 = mysqli_fetch_array($cekstocksekarang1);
-    $ambildatanya = mysqli_fetch_array($cekstocksekarang);
-    $stocksekarang = $ambildatanya['stock'];
+//     if ($stocksekarang >= $qty) {
+//         // kalau barang cukup
+//         $tambahkanstockdenganqty = $stocksekarang - $qty;
 
-    if ($stocksekarang >= $qty) {
-        // kalau barang cukup
-        $tambahkanstockdenganqty1 = $stocksekarang - $qty;
-        $tambahkanstockdenganqty = $stocksekarang + $qty;
-
-        $addkeluar = mysqli_query($conn, "INSERT INTO keluar (idbarang, penerima,qty) VALUES  ('$barangnya','$penerima','$qty')");
-        $updatestockmasuk = mysqli_query($conn, "update stock set stock ='$tambahkanstockdenganqty1' where idbarang ='$barangnya'");
-        $updatestockkeluar = mysqli_query($conn, "update barangkeluar set stock ='$tambahkanstockdenganqty' where idbarang ='$barangnya'");
-        if ($addkeluar && $updatestockmasuk && $updatestockkeluar) {
-            header('location:keluar.php');
-        } else {
-            echo 'gagal ';
-            header('location:404.html');
-        }
-    } else {
-        // barang tidak cuukp
-        echo '
-        <script>
-        alert ("Stock saat ini tidak mencukupi ");
-                window.location.href="keluar.php"
-        </script>
-        ';
-    }
-}
+//         $addkeluar = mysqli_query($conn, "insert into keluar (idbarang, penerima, diterima, qty, alamat) values ('$barangnya','$penerima','$diterima','$qty','$alamat')");
+//         $updatestockmasuk = mysqli_query($conn, "update stock set stock ='$tambahkanstockdenganqty' where idbarang ='$barangnya'");
+//         if ($addkeluar && $updatestockmasuk) {
+//             header('location:index1.php');
+//         } else {
+//             echo 'gagal ';
+//             header('location:404.html');
+//         }
+//     } else {
+//         // barang tidak cuukp
+//         echo '
+//         <script>
+//         alert ("Stock saat ini tidak mencukupi ");
+//                 window.location.href="keluar.php"
+//         </script>
+//         ';
+//     }
+// }
 
 
 // edit barang nya nih kakak
@@ -197,6 +195,17 @@ if (isset($_POST['hapusbrngkeluar'])) {
         header('location:404.html');
     }
 };
+
+$conn = mysqli_connect("localhost", "root", "", "stockbarang");
+if (!$conn) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+
+// Query untuk mengambil semua data pembeli kecuali admin
+$sql = "SELECT * FROM login WHERE keterangan != 'admin'";
+$result = mysqli_query($conn, $sql);
+
+
 
 
 

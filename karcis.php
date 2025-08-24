@@ -32,10 +32,7 @@ require 'connect.php';
                                 <div class="card-body">
                                     <form method="POST" action="export.php" target="_blank">
                                         <table>
-                                            <!-- <div class="form-floating mb-3">
-                                                    <input class="form-control" type="text" name="nama" placeholder="Nama Lengkap" required/>
-                                                    <label for="nama">Nama Penerima</label>
-                                                </div> -->
+                                           
                                             <div class="form-floating mb-3">
                                                 <input class="form-control" name="panggil" placeholder="Nama Lengkap"
                                                     required />

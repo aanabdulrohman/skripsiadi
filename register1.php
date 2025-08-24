@@ -1,21 +1,27 @@
 <?php
 require 'connect.php';
-require 'blmlogin.php';
+
 
 // tambah admin nih cok 
 if (isset($_POST['addadmin'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $keterangan = $_POST['keterangan'];
+    $namapt = $_POST['namapt'];
+    $namapemilik = $_POST['namapemilik'];
+    $nohp = $_POST['nohp'];
 
-    $queryinsert = mysqli_query($conn, "INSERT INTO login (email,password,keterangan) VALUES   ('$email','$password','$keterangan')");
+
+
+
+    $queryinsert = mysqli_query($conn, "INSERT INTO login (email,password,keterangan,namapt,namapemilik,nohp) VALUES   ('$email','$password','$keterangan','$namapt','$namapemilik','$nohp')");
 
     if ($queryinsert) {
         //fi berhasil 
         echo ('');
     } else {
         //kalau gagal insert ke db
-        header('location:password.html');
+        header('location:404.html');
     }
 }
 ?>
@@ -78,7 +84,21 @@ if (isset($_POST['addadmin'])) {
                                     <input class="form-control1" type="email" name="email"
                                         placeholder="name@example.com" required />
                                 </div>
-
+                                <div class="form-group mb-3">
+                                    <label class="label" for="namapt">Nama PT</label>
+                                    <input class="form-control1" type="text" name="namapt"
+                                        placeholder="Nama PT" required />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="label" for="namapemilik">Nama Pemilik</label>
+                                    <input class="form-control1" type="text" name="namapemilik"
+                                        placeholder="Nama Pemilik" required />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="label" for="nohp">No Hp</label>
+                                    <input class="form-control1" type="text" name="nohp"
+                                        placeholder="No Hp" required />
+                                </div>
                                 <div class="form-group mb-3">
                                     <label class="label" for="inputPassword">Password</label>
                                     <input class="form-control1" type="password" name="password"

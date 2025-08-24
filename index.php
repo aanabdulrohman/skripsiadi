@@ -32,7 +32,7 @@ $count_stock = mysqli_fetch_array($get_stock); // menghitung jumlah kolom stock
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-4" href="index.php"><br> <br>
-            <h6>UD. Mitra Lestari <br />Agro</h6>
+            <h6>AGP Olivia Sukses <br />Agro</h6>
         </a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
@@ -72,15 +72,23 @@ $count_stock = mysqli_fetch_array($get_stock); // menghitung jumlah kolom stock
                         </a>
                         <a class="nav-link" href="masuk.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Barang Masuk
+                            PO Masuk
+                        </a>
+                        <a class="nav-link" href="poselesai.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            PO Selesai
                         </a>
                         <a class="nav-link" href="keluar.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Barang Keluar
                         </a>
+                        <a class="nav-link" href="datacl.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Database Client
+                        </a>
                         <div class="sb-sidenav-menu-heading"></div>
                         <!-- prediksi section -->
-                        <a class="nav-link dropdown" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
+                        <!-- <a class="nav-link dropdown" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
                             aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fas fa-user-alt"></i></div>
                             Data Prediksi
@@ -94,7 +102,7 @@ $count_stock = mysqli_fetch_array($get_stock); // menghitung jumlah kolom stock
                                 <a class="nav-link collapsed" href="prediksi_kandang.php">Pupuk Kandang</a>
 
                             </nav>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>
@@ -114,6 +122,9 @@ $count_stock = mysqli_fetch_array($get_stock); // menghitung jumlah kolom stock
                             <!-- Button to Open the Modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
                                 Tambah Barang
+                            </button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalstock">
+                                Tambah Stock Barang
                             </button>
 
                         </div>
@@ -143,7 +154,7 @@ $count_stock = mysqli_fetch_array($get_stock); // menghitung jumlah kolom stock
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Barang</th>
-                                        <th>Pengelola</th>
+                                        <th>Penanggung Jawab</th>
                                         <th>Stock</th>
                                         <th>Action</th>
 
@@ -241,7 +252,7 @@ $count_stock = mysqli_fetch_array($get_stock); // menghitung jumlah kolom stock
                                     ?>
                                 </tbody>
                             </table>
-                            <b>Total Stock Pupuk: <?= $count_stock['jumlah']; ?></b>
+                            <b>Total Stock Barang: <?= $count_stock['jumlah']; ?></b>
 
                         </div>
                     </div>
@@ -250,7 +261,7 @@ $count_stock = mysqli_fetch_array($get_stock); // menghitung jumlah kolom stock
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Sutan Fanabih 2021</div>
+                        <!-- <div class="text-muted">Copyright &copy; Sutan Fanabih 2021</div> -->
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;
@@ -287,13 +298,58 @@ $count_stock = mysqli_fetch_array($get_stock); // menghitung jumlah kolom stock
             <!-- Modal body -->
             <form method="post">
                 <div class="modal-body">
-                    <select class="form-control" name="deskripsi" id=" exampleFormControlSelect1">
-                        <option>Anto</option>
-                    </select><br>
+                <input type="text" name="deskripsi" placeholder="Nama" class="form-control" required><br>
+                
                     <input type="text" name="namabarang" placeholder="Nama barang" class="form-control" required><br>
                     <input type="number" name="stock" class="form-control" placeholder="Quantity" required><br>
                     <!-- <input type="text" name="deskripsi" placeholder="Deskripsi" class="form-control" required><br> -->
                     <button type="submit" class="btn btn-primary" name="addnewbarang">Submit</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal tambah stock barang -->
+<div class="modal fade" id="myModalstock">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Tambahkan Barang</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <form method="post">
+                <div class="modal-body">
+                    <select name="barangnya" class="form-control">
+                        <?php
+                        $ambilsemuadatanya = mysqli_query($conn, "select * from stock ");
+                        while ($fetcharray = mysqli_fetch_array($ambilsemuadatanya)) {
+                            $namabarangnya = $fetcharray['namabarang'];
+                            $idbarangnya = $fetcharray['idbarang'];
+                        ?>
+
+                        <option value="<?= $idbarangnya; ?>"><?= $namabarangnya; ?></option>
+
+                        <?php
+                        }
+                        ?>
+                    </select>
+                    <br>
+                    <input type="number" name="qty" class="form-control" placeholder="Quantity" required><br>
+                    <!-- <input type="text" name="penerima" placeholder="keterangan" class="form-control" required><br> -->
+                    <select class="form-control" name="penerima" id="exampleFormControlSelect1">
+                        <option>sutan</option>
+                        <option>fajrin</option>
+                        <option>abi</option>
+                        <option>hartono</option>
+                        <option>fanabih</option>
+                    </select><br>
+                    <button type="submit" class="btn btn-primary" name="barangudhmasuk">Submit</button>
 
                 </div>
             </form>

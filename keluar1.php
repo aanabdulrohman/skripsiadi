@@ -1,6 +1,6 @@
 <?php
 require 'connect.php';
-require 'blmlogin.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +27,7 @@ require 'blmlogin.php';
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-4" href="index.php"><br> <br>
+        <a class="navbar-brand ps-4" href="index1.php"><br> <br>
             <h6>UD. Mitra Lestari <br />Agro</h6>
         </a>
         <!-- Sidebar Toggle-->
@@ -64,7 +64,7 @@ require 'blmlogin.php';
                         <div class="sb-sidenav-menu-heading"></div>
                         <a class="nav-link" href="index1.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Stock Barang
+                            Input PO Barang
                         </a>
                         <a class="nav-link" href="masuk1.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
@@ -163,108 +163,7 @@ require 'blmlogin.php';
                         </div>
 
                         <div class="card-body text-center">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Barang</th>
-                                        <th>Deskripsi</th>
-                                        <th>Barang keluar</th>
-                                        <!-- <th>Action</th> -->
-
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <?php
-                                    $ambilsemuastock = mysqli_query($conn, "select * from barangkeluar ");
-                                    $i = 1;
-                                    while ($data = mysqli_fetch_array($ambilsemuastock)) {
-                                        $namabarang = $data['namabarang'];
-                                        $deskripsi = $data['deskripsi'];
-                                        $stock = $data['stock'];
-                                        $idb = $data['idbarang'];
-                                    ?>
-
-                                    <tr>
-                                        <td><?= $i++; ?></td>
-                                        <td><?= $namabarang; ?></td>
-                                        <td><?= $deskripsi; ?></td>
-                                        <td><?= $stock; ?> </td>
-
-                                        <!-- <td>
-                                            <button type="button" class="btn btn-warning" data-toggle="modal"
-                                                data-target="#edit<?= $idb; ?>">
-                                                Edit
-                                            </button>
-                                            <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                data-target="#delete<?= $idb; ?>">
-                                                Delete
-                                            </button>
-                                        </td> -->
-                                    </tr>
-
-                                    <!--Edit The Modal -->
-                                    <div class="modal fade" id="edit<?= $idb; ?>">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Edit Barang</h4>
-                                                    <button type="button" class="close"
-                                                        data-dismiss="modal">&times;</button>
-                                                </div>
-
-                                                <!-- Modal body -->
-                                                <form method="post">
-                                                    <div class="modal-body">
-                                                        <input type="text" name="namabarang" value="<?= $namabarang; ?>"
-                                                            class="form-control" required><br>
-
-                                                        <input type="text" name="deskripsi" value="<?= $deskripsi; ?>"
-                                                            class="form-control" required><br>
-                                                        <input type="hidden" name="idb" value="<?= $idb; ?>">
-                                                        <button type="submit" class="btn btn-primary"
-                                                            name="updatebarang">Submit</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!--delete The Modal -->
-                                    <div class="modal fade" id="delete<?= $idb; ?>">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Delete Barang</h4>
-                                                    <button type="button" class="close"
-                                                        data-dismiss="modal">&times;</button>
-                                                </div>
-
-                                                <!-- Modal body -->
-                                                <form method="post">
-                                                    <div class="modal-body">
-                                                        Apakah anda ingin menghapus <?= $namabarang; ?> ?
-                                                        <input type="hidden" name="idb" value="<?= $idb; ?>">
-                                                        <br>
-                                                        <br>
-                                                        <button type="submit" class="btn btn-danger"
-                                                            name="hapusbarang">IYA</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <?php
-                                    };
-                                    ?>
-                                </tbody>
-                            </table>
+                           
                             <!-- dibawah history barang keluar -->
                             <table id="datatablesSimple">
                                 <thead>
@@ -274,7 +173,8 @@ require 'blmlogin.php';
                                         <th class="text-center">Nama Barang</th>
                                         <th class="text-center">Jumlah</th>
                                         <th class="text-center">Penerima</th>
-                                        <!-- <th class="text-center">Aksi</th> -->
+                                        <th class="text-center">Diterima</th>
+                                        <th class="text-center">Aksi</th>
 
                                     </tr>
                                 </thead>
@@ -288,9 +188,10 @@ require 'blmlogin.php';
                                         $namabarang = $data['namabarang'];
                                         $qty = $data['qty'];
                                         $penerima = $data['penerima'];
+                                        $diterima = $data ['diterima'];
                                         $idk = $data['idkeluar'];
                                         $idb = $data['idbarang'];
-
+                                    
                                     ?>
                                     <tr>
                                         <td><?= $i++; ?></td>
@@ -298,12 +199,13 @@ require 'blmlogin.php';
                                         <td><?= $namabarang; ?></td>
                                         <td><?= $qty; ?></td>
                                         <td><?= $penerima; ?></td>
+                                        <td><?= $diterima; ?></td>
 
                                         <td>
-                                            <!-- <button type="button" class="btn btn-danger" data-toggle="modal"
+                                            <button type="button" class="btn btn-danger" data-toggle="modal"
                                                 data-target="#delete<?= $idk; ?>">
                                                 Delete
-                                            </button> -->
+                                            </button>
                                         </td>
                                     </tr>
                                     <!--delete The Modal -->
@@ -337,8 +239,7 @@ require 'blmlogin.php';
                                     ?>
 
                                 </tbody>
-                                <!-- <a target="_blank" class="btn btn-secondary float-right"
-                                    href="cetakkeluar.php">Cetak</a> -->
+                                <
                             </table>
 
 

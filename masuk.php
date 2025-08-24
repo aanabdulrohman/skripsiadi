@@ -1,6 +1,7 @@
 <?php
+session_start();
 require 'connect.php';
-require 'blmlogin.php';
+
 
 ?>
 <!DOCTYPE html>
@@ -29,7 +30,7 @@ require 'blmlogin.php';
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-4" href="index.php"><br> <br>
-            <h6>UD. Mitra Lestari <br />Agro</h6>
+            <h6>PT Kencana Bangsa <br />Agro</h6>
         </a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
@@ -69,17 +70,24 @@ require 'blmlogin.php';
                         </a>
                         <a class="nav-link" href="masuk.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Barang Masuk
+                            PO Masuk
+                        </a>
+                        <a class="nav-link" href="poselesai.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            PO Selesai
                         </a>
                         <a class="nav-link" href="keluar.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Barang Keluar
                         </a>
-                        <div class="sb-sidenav-menu-heading">Data</div>
+                        <a class="nav-link" href="datacl.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Database Client
+                        </a>
 
 
                         <!-- sub menu data prediksi -->
-                        <a class="nav-link dropdown" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
+                        <!-- <a class="nav-link dropdown" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
                             aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fas fa-user-alt"></i></div>
                             Data Prediksi
@@ -93,7 +101,7 @@ require 'blmlogin.php';
                                 <a class="nav-link collapsed" href="prediksi_kandang.php">Pupuk Kandang</a>
 
                             </nav>
-                        </div>
+                        </div> -->
                         <!-- abaikan aja dlu -->
 
                     </div>
@@ -106,7 +114,7 @@ require 'blmlogin.php';
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Tambahkan Stock</h1>
+                    <h1 class="mt-4">PO Masuk </h1>
 
 
                     <!-- <div class="row">
@@ -132,77 +140,139 @@ require 'blmlogin.php';
                     <div class="card mb-4">
                         <div class="card-header">
                             <!-- Button to Open the Modal -->
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
                                 Tambah Barang
-                            </button>
+                            </button> -->
                         </div>
                         <div class="card-body">
-                            <table class="table table-bordered">
+                            <table id="datatablesSimple" class="table table-bordered">
                                 <thead>
                                     <tr>
+                                        <th>No Invoice</th>
+                                        <th>Nama Perusahaan</th>
                                         <th>Tanggal</th>
                                         <th>Nama Barang</th>
                                         <th>Jumlah</th>
-                                        <th>Keterangan</th>
+                                        <th>Harga</th>
+                                        <th>Total</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <?php
-                                    $ambilsemuastock = mysqli_query($conn, "select * from masuk1 m, stock s where s.idbarang = m.idbarang ");
-                                    while ($data = mysqli_fetch_array($ambilsemuastock)) {
-                                        $idb = $data['idbarang'];
-                                        $idm = $data['idmasuk'];
-                                        $tanggal = $data['tanggal'];
-                                        $namabarang = $data['namabarang'];
-                                        $qty = $data['qty'];
-                                        $keterangan = $data['keterangan'];
-                                    ?>
+                                <?php
+                                // Ambil data pembelian dan stok (join berdasarkan nama_barang)
+                                $sql = "
+    SELECT 
+        p.id, 
+        p.no_invoice, 
+        p.tanggal, 
+        p.nama_barang,
+        p.namapt, 
+        p.qty, 
+        p.harga, 
+        p.total, 
+        s.idbarang, 
+        s.stock
+    FROM pembelian p
+    JOIN stock s ON s.namabarang = p.nama_barang
+";
+                                $ambilsemuastock = mysqli_query($conn, $sql)
+                                    or die("Query Error: " . mysqli_error($conn));
+
+                                // ==========================
+                                // PROSES APPROVE
+                                // ==========================
+                                if (isset($_POST['approve'])) {
+                                    $idpembelian = $_POST['idpembelian']; // id di tabel pembelian
+                                    $idbarang    = $_POST['idbarang'];
+                                    $qty         = $_POST['qty'];
+                                    $tanggal     = $_POST['tanggal'];
+                                
+                                    // Ambil data pembelian termasuk no_invoice & namapt
+                                    $qPembelian = mysqli_query($conn, "SELECT nama_barang, harga, total, namapt, no_invoice 
+                                                                       FROM pembelian WHERE id='$idpembelian'");
+                                    $pembelianData = mysqli_fetch_assoc($qPembelian);
+                                
+                                    $nama_barang = $pembelianData['nama_barang'];
+                                    $harga       = $pembelianData['harga'];
+                                    $total       = $pembelianData['total'];
+                                    $namapt      = $pembelianData['namapt'];
+                                    $no_invoice  = $pembelianData['no_invoice'];
+                                
+                                    // Cek stok
+                                    $cek = mysqli_query($conn, "SELECT stock FROM stock WHERE idbarang='$idbarang'");
+                                    $data_stok = mysqli_fetch_assoc($cek);
+                                
+                                    if ($data_stok && $data_stok['stock'] >= $qty) {
+                                        mysqli_query($conn, "UPDATE stock SET stock = stock - $qty WHERE idbarang='$idbarang'");
+                                
+                                        mysqli_query($conn, "INSERT INTO keluar 
+                                            (idbarang, tanggal, qty, nama_barang, harga, total) 
+                                            VALUES 
+                                            ('$idbarang', '$tanggal', '$qty', '$nama_barang', '$harga', '$total')");
+                                
+                                        mysqli_query($conn, "INSERT INTO poselesai 
+                                            (idbarang, tanggal, qty, nama_barang, harga, total, namapt, no_invoice) 
+                                            VALUES 
+                                            ('$idbarang', '$tanggal', '$qty', '$nama_barang', '$harga', '$total', '$namapt', '$no_invoice')");
+                                
+                                        mysqli_query($conn, "DELETE FROM pembelian WHERE id='$idpembelian'");
+                                
+                                        echo "<script>
+                                            alert('Approve berhasil: stok dikurangi, data dipindahkan');
+                                            window.location.href='masuk.php';
+                                        </script>";
+                                    } else {
+                                        echo "<script>alert('Stok tidak mencukupi');</script>";
+                                    }
+                                }
+
+                                // ==========================
+                                // PROSES REJECT
+                                // ==========================
+                                if (isset($_POST['reject'])) {
+                                    $idpembelian = $_POST['idpembelian'];
+                                    mysqli_query($conn, "DELETE FROM pembelian WHERE id='$idpembelian'");
+                                    echo "<script>alert('Data berhasil direject');</script>";
+                                }
+                                ?>
+
+                                <?php while ($data = mysqli_fetch_array($ambilsemuastock)) { ?>
                                     <tr>
-                                        <td><?= $tanggal; ?></td>
-                                        <td><?= $namabarang; ?></td>
-                                        <td><?= $qty; ?></td>
-                                        <td><?= $keterangan; ?></td>
+                                        <td><?= $data['no_invoice']; ?></td>
+                                        <td><?= $data['namapt']; ?></td>
+                                        <td><?= $data['tanggal']; ?></td>
+                                        <td><?= $data['nama_barang']; ?></td>
+                                        <td><?= $data['qty']; ?></td>
+                                        <td><?= $data['harga']; ?></td>
+                                        <td><?= $data['total']; ?></td>
                                         <td>
-                                            <button type="button" class="btn btn-danger float-center"
-                                                data-toggle="modal" data-target="#delete<?= $idm; ?>">
-                                                Delete
-                                            </button>
+                                            <!-- Tombol Approve -->
+                                            <form method="post" style="display:inline;">
+                                                <input type="hidden" name="idpembelian" value="<?= $data['id']; ?>">
+                                                <input type="hidden" name="idbarang" value="<?= $data['idbarang']; ?>">
+                                                <input type="hidden" name="tanggal" value="<?= $data['tanggal']; ?>">
+                                                <input type="hidden" name="nama_barang" value="<?= $data['nama_barang']; ?>">
+                                                <input type="hidden" name="harga" value="<?= $data['harga']; ?>">
+                                                <input type="hidden" name="total" value="<?= $data['total']; ?>">
+                                                <input type="hidden" name="qty" value="<?= $data['qty']; ?>">
+                                                <button type="submit" name="approve" class="btn btn-primary">Approve</button>
+                                            </form>
+
+                                            <!-- Tombol Reject -->
+                                            <form method="post" style="display:inline;">
+                                                <input type="hidden" name="idpembelian" value="<?= $data['id']; ?>">
+                                                <button type="submit" name="reject" class="btn btn-danger">Reject</button>
+                                            </form>
                                         </td>
                                     </tr>
-                                    <!--delete The Modal -->
-                                    <div class="modal fade" id="delete<?= $idm; ?>">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Delete Barang</h4>
-                                                    <button type="button" class="close"
-                                                        data-dismiss="modal">&times;</button>
-                                                </div>
-
-                                                <!-- Modal body -->
-                                                <form method="post">
-                                                    <div class="modal-body">
-                                                        Apakah anda ingin menghapus <?= $keterangan; ?> ?
-                                                        <input type="hidden" name="idm" value="<?= $idm; ?>">
-                                                        <br>
-                                                        <br>
-                                                        <button type="submit" class="btn btn-danger"
-                                                            name="hapusbrngkeluar">IYA</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php
-                                    };
-                                    ?>
-                                </tbody>
-
+                                <?php } ?>
+                                <?php
+                                // Proses approve → insert ke tabel keluar
+                               
+                                
+                                
+                                ?>
                             </table>
-
-
                         </div>
                     </div>
                 </div>
@@ -210,7 +280,7 @@ require 'blmlogin.php';
             <footer class=" py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Sutan Fanabih 2021</div>
+                        <!-- <div class="text-muted">Copyright &copy; Sutan Fanabih 2021</div> -->
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;
@@ -255,7 +325,7 @@ require 'blmlogin.php';
                             $idbarangnya = $fetcharray['idbarang'];
                         ?>
 
-                        <option value="<?= $idbarangnya; ?>"><?= $namabarangnya; ?></option>
+                            <option value="<?= $idbarangnya; ?>"><?= $namabarangnya; ?></option>
 
                         <?php
                         }

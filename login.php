@@ -1,64 +1,41 @@
 <?php
-
+session_start();
 require 'connect.php';
 
-
-//cek login nya 
 if (isset($_POST['login'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-    //cocokin data login nya
-    $cekdatabase = mysqli_query($conn, "SELECT * From login where email='$email' and password ='$password'");
+    // Ambil semua kolom termasuk namapt
+    $cekdatabase = mysqli_query($conn, "SELECT * FROM login WHERE email='$email' AND password='$password'");
+    $data = mysqli_fetch_assoc($cekdatabase);
 
-    //hitung jumlah data
-    $hitung = mysqli_num_rows($cekdatabase);
+    if ($data) {
+        // Simpan semua data penting di session
+        $_SESSION['log'] = true;
+        $_SESSION['email'] = $data['email'];
+        $_SESSION['keterangan'] = $data['keterangan'];
+        $_SESSION['iduser'] = $data['id']; 
+        $_SESSION['namapt'] = $data['namapt']; // ✅ Ambil dari DB login
 
-    if ($hitung > 0) {
-
-        $data = mysqli_fetch_assoc($cekdatabase);
-
-        // cek jika user login sebagai admin
+        // Arahkan sesuai role
         if ($data['keterangan'] == "admin") {
-
-            // buat session login dan username
-            $_SESSION['email'] = $email;
-            $_SESSION['keterangan'] = "admin";
-            // alihkan ke halaman dashboard admin
             header("location:index.php");
-
-            // cek jika user login sebagai pegawai
-        } else if ($data['keterangan'] == "pembeli") {
-            // buat session login dan username
-            $_SESSION['email'] = $email;
-            $_SESSION['keterangan'] = "	
-            pembeli";
-            // alihkan ke halaman dashboard pegawai
+        } elseif ($data['keterangan'] == "pembeli") {
             header("location:index1.php");
-
-            // cek jika user login sebagai pengurus
-        } else if ($data['keterangan'] == "pembeli") {
-            // buat session login dan username
-            $_SESSION['email'] = $email;
-            $_SESSION['keterangan'] = "pembeli";
-            // alihkan ke halaman dashboard pengurus
+        } elseif ($data['keterangan'] == "pengurus") {
             header("location:halaman_pengurus.php");
         } else {
-
-            // alihkan ke halaman login kembali
-            header("location:index.php?pesan=gagal");
+            header("location:404.html");
         }
+        exit;
     } else {
-        header("location:index.php?pesan=gagal");
+        header("location:login.php?pesan=gagal");
+        exit;
     }
-};
-
-if (!isset($_SESSION['log'])) {
-} else {
-    header('location:index.php');
 }
-
 ?>
+
 <!doctype html>
 <html lang="en">
 
@@ -107,7 +84,7 @@ if (!isset($_SESSION['log'])) {
                                 <div class="form-group mb-3">
                                     <label class="label" for="name">Username</label>
                                     <input type="email" name="email" id="inputEmail" class="form-control"
-                                        placeholder="Username" required>
+                                        placeholder="Email" required>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label class="label" for="password">Password</label>

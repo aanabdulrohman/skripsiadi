@@ -1,6 +1,5 @@
 <?php
 require 'connect.php';
-require 'blmlogin.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +27,7 @@ require 'blmlogin.php';
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-4" href="index.php"><br> <br>
-            <h6>UD. Mitra Lestari <br />Agro</h6>
+            <h6>PT Kencana Bangsa <br />Agro</h6>
         </a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
@@ -68,17 +67,24 @@ require 'blmlogin.php';
                         </a>
                         <a class="nav-link" href="masuk.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Barang Masuk
+                            PO Masuk
+                        </a>
+                        <a class="nav-link" href="poselesai.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            PO Selesai
                         </a>
                         <a class="nav-link" href="keluar.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Barang Keluar
                         </a>
-                        <div class="sb-sidenav-menu-heading">Data</div>
-
+                        <a class="nav-link" href="datacl.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Database Client
+                        </a>
+                       
 
                         <!-- sub menu data prediksi -->
-                        <a class="nav-link dropdown" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
+                        <!-- <a class="nav-link dropdown" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
                             aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fas fa-user-alt"></i></div>
                             Data Prediksi
@@ -90,9 +96,8 @@ require 'blmlogin.php';
                                 <a class="nav-link collapsed" href="prediksi.php">Media Tanam</a>
                                 <a class="nav-link collapsed" href="prediksi_kompos.php">Pupuk Kompos</a>
                                 <a class="nav-link collapsed" href="prediksi_kandang.php">Pupuk Kandang</a>
-
                             </nav>
-                        </div>
+                        </div> -->
                         <!-- abaikan aja dlu -->
 
                     </div>
@@ -136,16 +141,16 @@ require 'blmlogin.php';
                     <div class="card mb-4">
                         <div class="card-header">
                             <!-- Button to Open the Modal -->
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                                Barang Keluar
-                            </button>
+                            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                                Input Data PO
+                            </button> -->
                             <!-- <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#myModalbrng">
                                 Cetak Barang Keluar
                             </button> -->
                             <!-- simpan barang keluar -->
                             <div class="btn-group">
-                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
+                                <!-- <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                     Simpan
                                 </button>
@@ -156,124 +161,22 @@ require 'blmlogin.php';
                                         Pupuk Kompos</a>
                                     <a class="dropdown-item" data-toggle="modal" data-target="#savedata3" href="#">Pupuk
                                         Kandang</a>
-                                </div>
+                                </div> -->
                             </div>
                             <!-- <a href="karcis1.php" class="btn btn-secondary" target="_blank">Cetak</a> -->
 
                         </div>
 
-                        <div class="card-body text-center">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Barang</th>
-                                        <!-- <th>Deskripsi</th> -->
-                                        <th>Barang keluar</th>
-
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <?php
-                                    $ambilsemuastock = mysqli_query($conn, "select * from barangkeluar ");
-                                    $i = 1;
-                                    while ($data = mysqli_fetch_array($ambilsemuastock)) {
-                                        $namabarang = $data['namabarang'];
-                                        $deskripsi = $data['deskripsi'];
-                                        $stock = $data['stock'];
-                                        $idb = $data['idbarang'];
-                                    ?>
-
-                                    <tr>
-                                        <td><?= $i++; ?></td>
-                                        <td><?= $namabarang; ?></td>
-                                        <!-- <td><?= $deskripsi; ?></td> -->
-                                        <td><?= $stock; ?> </td>
-
-
-                                        <!-- <button type="button" class="btn btn-warning" data-toggle="modal"
-                                                data-target="#edit<?= $idb; ?>">
-                                                Edit
-                                            </button> -->
-                                        <!-- <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                data-target="#delete<?= $idb; ?>">
-                                                Delete
-                                            </button> -->
-
-                                    </tr>
-
-                                    <!--Edit The Modal -->
-                                    <div class="modal fade" id="edit<?= $idb; ?>">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Edit Barang</h4>
-                                                    <button type="button" class="close"
-                                                        data-dismiss="modal">&times;</button>
-                                                </div>
-
-                                                <!-- Modal body -->
-                                                <form method="post">
-                                                    <div class="modal-body">
-                                                        <input type="text" name="namabarang" value="<?= $namabarang; ?>"
-                                                            class="form-control" required><br>
-
-                                                        <input type="text" name="deskripsi" value="<?= $deskripsi; ?>"
-                                                            class="form-control" required><br>
-                                                        <input type="hidden" name="idb" value="<?= $idb; ?>">
-                                                        <button type="submit" class="btn btn-primary"
-                                                            name="updatebarang">Submit</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!--delete The Modal -->
-                                    <div class="modal fade" id="delete<?= $idb; ?>">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Delete Barang</h4>
-                                                    <button type="button" class="close"
-                                                        data-dismiss="modal">&times;</button>
-                                                </div>
-
-                                                <!-- Modal body -->
-                                                <form method="post">
-                                                    <div class="modal-body">
-                                                        Apakah anda ingin menghapus <?= $namabarang; ?> ?
-                                                        <input type="hidden" name="idb" value="<?= $idb; ?>">
-                                                        <br>
-                                                        <br>
-                                                        <button type="submit" class="btn btn-danger"
-                                                            name="hapusbarang">IYA</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <?php
-                                    };
-                                    ?>
-                                </tbody>
-                            </table>
+                        <div class="card-body text-left">
+                           
                             <!-- dibawah history barang keluar -->
                             <table id="datatablesSimple">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th class="text-center">Tanggal</th>
-                                        <th class="text-center">Nama Barang</th>
-                                        <th class="text-center">Jumlah</th>
-                                        <th class="text-center">Penerima</th>
-                                        <th class="text-center">Aksi</th>
+                                        <th class="text-left">Nama Barang</th>
+                                        <th class="text-left">Jumlah</th>
+                                        <th class="text-left">Aksi</th>
 
                                     </tr>
                                 </thead>
@@ -286,18 +189,16 @@ require 'blmlogin.php';
                                         $tanggal = $data['tanggal'];
                                         $namabarang = $data['namabarang'];
                                         $qty = $data['qty'];
-                                        $penerima = $data['penerima'];
+                                        $harga = $data['harga'];
+                                        $total = $data ['total'];
                                         $idk = $data['idkeluar'];
                                         $idb = $data['idbarang'];
-
+                                    
                                     ?>
                                     <tr>
                                         <td><?= $i++; ?></td>
-                                        <td><?= $tanggal; ?></td>
                                         <td><?= $namabarang; ?></td>
                                         <td><?= $qty; ?></td>
-                                        <td><?= $penerima; ?></td>
-
                                         <td>
                                             <button type="button" class="btn btn-danger" data-toggle="modal"
                                                 data-target="#delete<?= $idk; ?>">
@@ -319,7 +220,7 @@ require 'blmlogin.php';
                                                 <!-- Modal body -->
                                                 <form method="post">
                                                     <div class="modal-body">
-                                                        Apakah anda ingin menghapus <?= $penerima; ?> ?
+                                                        Apakah anda ingin menghapus <?= $namabarang; ?> ?
                                                         <input type="hidden" name="idk" value="<?= $idk; ?>">
                                                         <br>
                                                         <br>
@@ -336,8 +237,7 @@ require 'blmlogin.php';
                                     ?>
 
                                 </tbody>
-                                <a target="_blank" class="btn btn-secondary float-right"
-                                    href="cetakkeluar.php">Cetak</a>
+                                
                             </table>
 
 
@@ -348,7 +248,7 @@ require 'blmlogin.php';
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Sutan Fanabih 2021</div>
+                        <!-- <div class="text-muted">Copyright &copy; Sutan Fanabih 2021</div> -->
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;
@@ -371,51 +271,13 @@ require 'blmlogin.php';
 </body>
 
 <!-- The Modal cetak barang keluar -->
-<div class="modal fade" id="myModalbrng">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Tambahkan Barang Keluar</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal body -->
-            <form method="post">
-                <div class="modal-body">
-                    <select name="barangnya" class="form-select">
-                        <?php
-                        $ambilsemuadatanya = mysqli_query($conn, "select * from barangkeluar ");
-                        while ($fetcharray = mysqli_fetch_array($ambilsemuadatanya)) {
-                            $namabarangnya = $fetcharray['namabarang'];
-                            $idbarangnya = $fetcharray['idbarang'];
-                        ?>
-
-                        <option value="<?= $idbarangnya; ?>"><?= $namabarangnya; ?></option>
-
-                        <?php
-                        }
-                        ?>
-                    </select>
-                    <br>
-                    <input type="number" name="qty" class="form-control" placeholder="Quantity" required><br>
-                    <input type="text" name="penerima" class="form-control" placeholder="Penerima" required><br>
-                    <button type="submit" class="btn btn-primary" name="barangkeluar">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- input barang keluar  -->
 <div class="modal fade" id="myModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog ">
         <div class="modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Catat Barang Keluar</h4>
+                <h4 class="modal-title">Silahkan Isi Barang PO</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -438,6 +300,7 @@ require 'blmlogin.php';
                     </select>
                     <br>
                     <input type="number" name="qty" class="form-control" placeholder="Quantity" required><br>
+                    <input type="text" name="diterima" class="form-control" placeholder="Barang Diterima" required><br>
                     <input type="text" name="penerima" class="form-control" placeholder="Penerima" required><br>
                     <button type="submit" class="btn btn-primary" name="addbarangout">Submit</button>
                 </div>
@@ -445,6 +308,8 @@ require 'blmlogin.php';
         </div>
     </div>
 </div>
+
+
 
 <!-- modal simpan barang keluar media tanam-->
 <div class="modal fade" id="savedata1">

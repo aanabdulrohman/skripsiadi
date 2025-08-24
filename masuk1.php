@@ -1,6 +1,6 @@
 <?php
 require 'connect.php';
-require 'blmlogin.php';
+session_start();
 
 ?>
 <!DOCTYPE html>
@@ -28,8 +28,8 @@ require 'blmlogin.php';
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-4" href="index.php"><br> <br>
-            <h6>UD. Mitra Lestari <br />Agro</h6>
+        <a class="navbar-brand ps-4" href="index1.php"><br> <br>
+            <h6>PT Kencana Bangsa <br />Agro</h6>
         </a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
@@ -65,17 +65,13 @@ require 'blmlogin.php';
                         <div class="sb-sidenav-menu-heading"></div>
                         <a class="nav-link" href="index1.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Stock Barang
+                            PO Barang
                         </a>
                         <a class="nav-link" href="masuk1.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Barang Masuk
+                            Detail Barang
                         </a>
-                        <a class="nav-link" href="keluar1.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Barang Keluar
-                        </a>
-                        <div class="sb-sidenav-menu-heading">Data</div>
+
 
 
                         <!-- sub menu data prediksi -->
@@ -106,7 +102,7 @@ require 'blmlogin.php';
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Tambahkan Stock</h1>
+                    <h1 class="mt-4">Detail Barang</h1>
 
 
                     <!-- <div class="row">
@@ -136,69 +132,79 @@ require 'blmlogin.php';
                                 Tambah Barang
                             </button> -->
                         </div>
-                        <div class="card-body">
+                        <div class="card-body ">
                             <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Tanggal</th>
-                                        <th>Nama Barang</th>
-                                        <th>Jumlah</th>
-                                        <th>Keterangan</th>
-                                        <!-- <th>Aksi</th> -->
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $ambilsemuastock = mysqli_query($conn, "select * from masuk1 m, stock s where s.idbarang = m.idbarang ");
-                                    while ($data = mysqli_fetch_array($ambilsemuastock)) {
-                                        $idb = $data['idbarang'];
-                                        $idm = $data['idmasuk'];
-                                        $tanggal = $data['tanggal'];
-                                        $namabarang = $data['namabarang'];
-                                        $qty = $data['qty'];
-                                        $keterangan = $data['keterangan'];
-                                    ?>
-                                    <tr>
-                                        <td><?= $tanggal; ?></td>
-                                        <td><?= $namabarang; ?></td>
-                                        <td><?= $qty; ?></td>
-                                        <td><?= $keterangan; ?></td>
-                                        <!-- <td>
-                                            <button type="button" class="btn btn-danger float-center"
-                                                data-toggle="modal" data-target="#delete<?= $idm; ?>">
-                                                Delete
-                                            </button>
-                                        </td> -->
-                                    </tr>
-                                    <!--delete The Modal -->
-                                    <div class="modal fade" id="delete<?= $idm; ?>">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Delete Barang</h4>
-                                                    <button type="button" class="close"
-                                                        data-dismiss="modal">&times;</button>
-                                                </div>
-
-                                                <!-- Modal body -->
-                                                <form method="post">
-                                                    <div class="modal-body">
-                                                        Apakah anda ingin menghapus <?= $keterangan; ?> ?
-                                                        <input type="hidden" name="idm" value="<?= $idm; ?>">
-                                                        <br>
-                                                        <br>
-                                                        <button type="submit" class="btn btn-danger"
-                                                            name="hapusbrngkeluar">IYA</button>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                <div class="d-flex flex-wrap gap-3 p-3 text-center">
+                                    <div class="card" style="width: 13rem;">
+                                        <img src="assets/img/karung.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Karung</h5>
+                                            <p class="card-text">Harga Rp.3.000,-</p>
+                                        
                                         </div>
                                     </div>
-                                    <?php
-                                    };
-                                    ?>
-                                </tbody>
+                                    <div class="card" style="width: 18rem;">
+                                        <img src="assets/img/plastik1kg.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Plastik 1kg</h5>
+                                            <p class="card-text">Harga Rp.20.000,-</p>
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="card" style="width: 18rem;">
+                                        <img src="assets/img/plastik2kg.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Plastik 2kg</h5>
+                                            <p class="card-text">Harga Rp.30.000,-</p>
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="card" style="width: 18rem;">
+                                        <img src="assets/img/tali.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Tali Rapia</h5>
+                                            <p class="card-text">Harga Rp.10.000,-</p>
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="card" style="width: 18rem;">
+                                        <img src="assets/img/bubblewrap.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Bubble Wrap</h5>
+                                            <p class="card-text">Harga Rp.95.000,-</p>
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="card" style="width: 18rem;">
+                                        <img src="assets/img/kabelties.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Kabel Ties</h5>
+                                            <p class="card-text">Harga Rp.7.000,-</p>
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="card" style="width: 18rem;">
+                                        <img src="assets/img/plastikwrap.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Plastik Wrap</h5>
+                                            <p class="card-text">Harga Rp.31.000,-</p>
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="card" style="width: 26rem;">
+                                        <img src="assets/img/lakban.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Lakban</h5>
+                                            <p class="card-text">Harga Rp.6.000,-</p>
+                                        
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Tambah card baru, akan otomatis horizontal dan pindah baris jika penuh -->
+                                </div>
+
+
 
                             </table>
 
@@ -210,7 +216,7 @@ require 'blmlogin.php';
             <footer class=" py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Sutan Fanabih 2021</div>
+                        <!-- <div class="text-muted">Copyright &copy; Sutan Fanabih 2021</div> -->
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;
@@ -255,7 +261,7 @@ require 'blmlogin.php';
                             $idbarangnya = $fetcharray['idbarang'];
                         ?>
 
-                        <option value="<?= $idbarangnya; ?>"><?= $namabarangnya; ?></option>
+                            <option value="<?= $idbarangnya; ?>"><?= $namabarangnya; ?></option>
 
                         <?php
                         }
